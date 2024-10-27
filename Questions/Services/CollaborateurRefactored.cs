@@ -1,5 +1,4 @@
-
-namespace Questions
+namespace Questions.Services
 {
     /**
      * Collaborateur.cs :

@@ -27,21 +27,15 @@ namespace Questions
      * de modifier message dans Valider).
      * 
      */
-    public class Question
+    public class Question(ICollaborateur collaborateur)
     {
         // Injection de dépendance pour ICollaborateur pour rendre la classe testable et découplée
-        private readonly ICollaborateur _collaborateur;
-
-        // Constructeur avec injection de dépendance
-        public Question(ICollaborateur collaborateur)
-        {
-            _collaborateur = collaborateur;
-        }
+        private readonly ICollaborateur _collaborateur = collaborateur;
 
         public void Traiter(List<string> listeContenu)
         {
             // Validation de la liste pour s'assurer qu'elle n'est ni null ni vide
-            if (listeContenu == null || !listeContenu.Any())
+            if (listeContenu == null || listeContenu.Count == 0)
                 throw new ArgumentException("La liste de contenu ne peut être vide.");
 
             var listeContenuValide = new List<string>();
@@ -53,7 +47,7 @@ namespace Questions
                 if (Valider(contenu, out string message))
                 {
                     // Limite le contenu à une longueur maximale de 10 caractères
-                    var contenuCourt = contenu.Substring(0, Math.Min(10, contenu.Length));
+                    var contenuCourt = contenu[..Math.Min(10, contenu.Length)];
 
                     // Ajout du contenu validé à la liste des contenus valides s'il n'est pas déjà présent
                     if (!listeContenuValide.Contains(contenuCourt))
@@ -73,7 +67,7 @@ namespace Questions
         }
 
         // Méthode de validation améliorée avec un paramètre de sortie pour le message d'erreur
-        private bool Valider(string contenu, out string message)
+        private static bool Valider(string contenu, out string message)
         {
             message = string.Empty;
 
